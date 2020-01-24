@@ -35,20 +35,38 @@ class ViewController: UIViewController
     @IBAction func showAlert()
     {
         let difference = abs(targetValue - currentValue)
-        let points = 100 - difference
+        var points = 100 - difference
+        
+        let title: String
+        
+        if difference == 0
+        {
+            title = "Perfect! You get 100 points bonus"
+            points += 100
+        }
+        else if difference == 1
+        {
+            title = "You almost had it!, 50 points bonus"
+            points += 50
+        }
+        else
+        {
+            title = "Not even close!"
+        }
         
         score += points
         
         let message = "You score \(points) points"
         
-        let alert = UIAlertController(title: "Hello, World!", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let action = UIAlertAction(title: "OK", style: .default, handler: {
+            action in self.startNewRound()
+        })
         
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
         
-        startNewRound()
     }
 
     @IBAction func sliderMoved(_ slider: UISlider)
@@ -56,6 +74,13 @@ class ViewController: UIViewController
         print("The value of the slider is now: \(slider.value)")
         let roundedValue = slider.value.rounded()
         currentValue = Int(roundedValue)
+    }
+    
+    @IBAction func startOver()
+    {
+        round = 0
+        score = 0
+        startNewRound()
     }
     
     func startNewRound()
